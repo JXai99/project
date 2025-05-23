@@ -10,6 +10,9 @@ from helpers import apology, login_required, lookup, usd
 # Configure application
 app = Flask(__name__)
 
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
@@ -34,9 +37,11 @@ def after_request(response):
 
 
 @app.route("/", methods=["GET", "POST"])
-@login_required
+#@login_required
 def index():
-    return render_template("index.html")
+    if request.method == "GET":
+        print("homepage HOMEPAGE")
+        return render_template("layout.html")
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
