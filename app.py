@@ -124,6 +124,24 @@ def indexin():
     if request.method == "GET":
         print("indexin HOMEPAGE")
         return render_template("indexin.html")
+    
+@app.route("/about", methods=["GET", "POST"])
+@login_required
+def about():
+    if request.method == "GET":
+        return render_template("aboutme.html")
+    
+@app.route("/contact", methods=["GET", "POST"])
+@login_required
+def contact():
+    if request.method == "GET":
+        return render_template("contactme.html")
+    
+@app.route("/scores", methods=["GET", "POST"])
+@login_required
+def scores():
+    if request.method == "GET":
+        return render_template("indexin.html")
 
 
 @app.route("/logout")
