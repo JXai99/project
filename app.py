@@ -41,7 +41,7 @@ def after_request(response):
 def index():
     if request.method == "GET":
         print("homepage HOMEPAGE")
-        return render_template("layout.html")
+        return render_template("index.html")
 
 #if __name__ == "__main__":
 #    app.run(debug=True)
