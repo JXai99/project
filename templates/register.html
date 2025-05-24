@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    
+        <form action="/register" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Insert Password" type="password">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="verify" name="confirmation" placeholder="Verify Password" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button> <br>
+
+
+    </form>
+    <small id="msg" style="color: red;"></small>
+
+    <script>
+        document.querySelector("#verify").addEventListener("blur", function() {
+            const pw1 = document.querySelector("#password").value;
+            const pw2 = document.querySelector("#verify").value;
+            const msg = document.querySelector("#msg");
+
+
+            if (pw1 !== pw2) {
+                msg.textContent = "Passwords do not match!";
+            } else {
+                msg.textContent = "";
+            }
+        });
+    </script>
+   
+{% endblock %}
