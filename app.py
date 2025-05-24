@@ -112,11 +112,18 @@ def login():
         session["user_id"] = rows[0]["id"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/indexin")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+    
+@app.route("/indexin", methods=["GET", "POST"])
+@login_required
+def indexin():
+    if request.method == "GET":
+        print("indexin HOMEPAGE")
+        return render_template("indexin.html")
 
 
 @app.route("/logout")
