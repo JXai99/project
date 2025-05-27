@@ -10,7 +10,7 @@
             <option value="{{ day }}" {% if day == current_matchday %}selected{% endif %}>Matchday {{ day }}</option>
         {% endfor %}
     </select>
-    <button type="submit" class="btn btn-outline-primary">View</button>
+    <button type="submit" class="btn active" role="button" data-bs-toggle="button" aria-pressed="true">View</button>
 </form>
 
 
