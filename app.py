@@ -1,4 +1,5 @@
 import os
+import requests
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -9,6 +10,10 @@ from helpers import apology, login_required, lookup, usd
 
 # Configure application
 app = Flask(__name__)
+
+# replace with your Football-Data.org key
+API_KEY = "009373b0cce742118dd4284e9814347c"  
+BASE_URL = "https://api.football-data.org/v4/competitions/BL1/matches"
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -141,7 +146,17 @@ def contact():
 @login_required
 def scores():
     if request.method == "GET":
-        return render_template("indexin.html")
+        matchday = request.args.get("matchday", default=1, type=int)  # Default to matchday 1
+        headers = {"X-Auth-Token": API_KEY}
+        url = f"https://api.football-data.org/v4/competitions/BL1/matches?matchday={matchday}"
+
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        matches = data.get("matches", [])
+
+        return render_template("scores.html", matches=matches, current_matchday=matchday)
+
+
 
 
 @app.route("/logout")

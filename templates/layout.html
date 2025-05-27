@@ -16,6 +16,10 @@
 
         <link href="/static/styles.css" rel="stylesheet">
 
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
         <title>sportSSoCCer: {% block title %}{% endblock %}</title>
 
     </head>
@@ -64,7 +68,7 @@
             </header>
         {% endif %}
         {% endwith %}
-
+            
         <main class="container py-5 text-center">
             {% block main %}{% endblock %}
         </main>

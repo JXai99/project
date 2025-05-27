@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="scores-bg-image">
+    <main class="container py-5 text-center">
+        <form method="GET" action="{{ url_for('scores') }}" class="text-center mb-4">
+    <label for="matchday" class="form-label">Select Matchday:</label>
+    <select name="matchday" id="matchday" class="form-select w-auto d-inline mx-2">
+        {% for day in range(1, 35) %}
+            <option value="{{ day }}" {% if day == current_matchday %}selected{% endif %}>Matchday {{ day }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-outline-primary">View</button>
+</form>
+
+
+
+
+        {% for match in matches %}
+      <div class="card glass-card mb-3 mx-auto" style="max-width: 600px;">
+    <div class="card-body text-center">
+
+        <!-- Top row: Logos and team names -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- Home Logo -->
+            <img src="https://crests.football-data.org/{{ match['homeTeam']['id'] }}.svg"
+                 alt="{{ match['homeTeam']['name'] }} logo"
+                 width="40" height="40">
+
+            <!-- Team Names -->
+            <div class="mx-3">
+                <strong>{{ match['homeTeam']['name'] }}</strong>
+                <span class="mx-1">vs</span>
+                <strong>{{ match['awayTeam']['name'] }}</strong>
+            </div>
+
+            <!-- Away Logo -->
+            <img src="https://crests.football-data.org/{{ match['awayTeam']['id'] }}.svg"
+                 alt="{{ match['awayTeam']['name'] }} logo"
+                 width="40" height="40">
+        </div>
+
+        <!-- Single center badge (match status) -->
+        <div class="mb-2">
+            {% if match['status'] == 'SCHEDULED' %}
+                <span class="badge bg-secondary">Scheduled</span>
+            {% elif match['status'] == 'FINISHED' %}
+                <span class="badge bg-success">Finished</span>
+            {% elif match['status'] in ['LIVE', 'IN_PLAY'] %}
+                <span class="badge bg-danger">Live</span>
+            {% elif match['status'] == 'POSTPONED' %}
+                <span class="badge bg-warning text-dark">Postponed</span>
+            {% endif %}
+        </div>
+
+        <!-- Match Score -->
+        {% if match['score']['fullTime']['home'] is not none %}
+            <div><strong>Score:</strong> {{ match['score']['fullTime']['home'] }} - {{ match['score']['fullTime']['away'] }}</div>
+        {% else %}
+            <div><em>Not started</em></div>
+        {% endif %}
+
+    </div>
+</div>
+
+
+    {% endfor %}
+    </main>
+</div>
+{% endblock %}
