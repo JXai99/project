@@ -16,7 +16,7 @@ API_KEY = "009373b0cce742118dd4284e9814347c"
 BASE_URL = "https://api.football-data.org/v4/competitions/BL1/matches"
 
 # Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
+#app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Custom filter
 app.jinja_env.filters["usd"] = usd
