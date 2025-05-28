@@ -145,16 +145,29 @@ def contact():
 @app.route("/scores", methods=["GET", "POST"])
 @login_required
 def scores():
-    if request.method == "GET":
-        matchday = request.args.get("matchday", default=1, type=int)  # Default to matchday 1
+    if request.method == "POST":
+        print("indexin POST SCORES MATCH34")
+        matchday = int(request.form.get("matchday"))
+        
         headers = {"X-Auth-Token": API_KEY}
-        url = f"https://api.football-data.org/v4/competitions/BL1/matches?matchday={matchday}"
-
-        response = requests.get(url, headers=headers)
-        data = response.json()
-        matches = data.get("matches", [])
+        result = lookup(matchday,headers)
+        print("ENVIO LOOKUP A HELPERS")
+        if result:
+            print("RESPONDIO LA FUNCION HELPERS LOOKUP")
+            matches = result.get("matches", [])
 
         return render_template("scores.html", matches=matches, current_matchday=matchday)
+    else:
+        print("indexin HOscoresMEPAGE")
+        matchday = request.args.get("matchday", default=1, type=int)  # Default to matchday 1
+        headers = {"X-Auth-Token": API_KEY}
+        result = lookup(matchday,headers)
+        print("ENVIO LOOKUP A HELPERS")
+        if result:
+            print("RESPONDIO LA FUNCION HELPERS LOOKUP")
+            matches = result.get("matches", [])
+        return render_template("scores.html",matches=matches, current_matchday=matchday)
+
 
 
 

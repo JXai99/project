@@ -3,7 +3,7 @@
 {% block main %}
 <div class="scores-bg-image">
     <main class="container py-5 text-center">
-        <form method="GET" action="{{ url_for('scores') }}" class="text-center mb-4">
+        <form method="POST" action="{{ url_for('scores') }}" class="text-center mb-4">
     <label for="matchday" class="form-label">Select Matchday:</label>
     <select name="matchday" id="matchday" class="form-select w-auto d-inline mx-2">
         {% for day in range(1, 35) %}
