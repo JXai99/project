@@ -13,3 +13,7 @@ CREATE TABLE scores (
     home_score INTEGER,
     away_score INTEGER
 );
+
+select id from users;
+select username from users;
+select * from users;
