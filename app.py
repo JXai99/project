@@ -47,11 +47,10 @@ def after_request(response):
     return response
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 #@login_required
 def index():
     if request.method == "GET":
-        print("homepage HOMEPAGE")
         return render_template("index.html")
     
 @app.route("/register", methods=["GET", "POST"])
@@ -129,20 +128,20 @@ def login():
     else:
         return render_template("login.html")
     
-@app.route("/indexin", methods=["GET", "POST"])
+@app.route("/indexin", methods=["GET"])
 @login_required
 def indexin():
     if request.method == "GET":
         print("indexin HOMEPAGE")
         return render_template("indexin.html")
     
-@app.route("/about", methods=["GET", "POST"])
+@app.route("/about", methods=["GET"])
 @login_required
 def about():
     if request.method == "GET":
         return render_template("aboutme.html")
     
-@app.route("/contact", methods=["GET", "POST"])
+@app.route("/contact", methods=["GET"])
 @login_required
 def contact():
     if request.method == "GET":
