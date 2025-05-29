@@ -35,7 +35,9 @@ app.config["SECRET_KEY"] = "your_secret_key"
 #app.secret_key = "your_super_secret_key"
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///scores.db")
+DATABASE_URL = os.getenv("DATABASE_URL")
+db = SQL(DATABASE_URL)
+#db = SQL("sqlite:///scores.db")
 
 
 @app.after_request
@@ -79,11 +81,13 @@ def register():
         print("username ok")
         hash = generate_password_hash(pw1)
 
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", name, hash)
+        update=db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", name, hash)
+        if update == 0:
+            flash("Username Not Registered", "success")
+            return apology("Username Not Registered", 400)
         rowsid = db.execute("SELECT id FROM users")
         session["user_id"] = rowsid[0]["id"]
         flash("Registered successfully!", "success")
-        # return render_template("quote.html")
         return redirect("/login")
 
     else:
@@ -151,12 +155,9 @@ def contact():
 @login_required
 def scores():
     if request.method == "POST":
-        print("indexin POST SCORES MATCH34")
         matchday = int(request.form.get("matchday"))
-        
         headers = {"X-Auth-Token": API_KEY}
         result = lookup(matchday,headers)
-        #print("ENVIO LOOKUP A HELPERS")
         if result:
             #print("RESPONDIO LA FUNCION HELPERS LOOKUP")
             matches = result.get("matches", [])
