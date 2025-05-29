@@ -7,12 +7,18 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from helpers import apology, login_required, lookup, usd
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Configure application
 app = Flask(__name__)
 
 # replace with your Football-Data.org key
-API_KEY = "009373b0cce742118dd4284e9814347c"  
+API_KEY = os.getenv("API_KEY")
+if not API_KEY:
+    raise RuntimeError("API_KEY environment variable is not set")  
 BASE_URL = "https://api.football-data.org/v4/competitions/BL1/matches"
 
 # Ensure templates are auto-reloaded
@@ -151,20 +157,18 @@ def scores():
         
         headers = {"X-Auth-Token": API_KEY}
         result = lookup(matchday,headers)
-        print("ENVIO LOOKUP A HELPERS")
+        #print("ENVIO LOOKUP A HELPERS")
         if result:
-            print("RESPONDIO LA FUNCION HELPERS LOOKUP")
+            #print("RESPONDIO LA FUNCION HELPERS LOOKUP")
             matches = result.get("matches", [])
 
         return render_template("scores.html", matches=matches, current_matchday=matchday)
     else:
-        print("indexin HOscoresMEPAGE")
+        #print("indexin HOscoresMEPAGE")
         matchday = request.args.get("matchday", default=1, type=int)  # Default to matchday 1
         headers = {"X-Auth-Token": API_KEY}
         result = lookup(matchday,headers)
-        print("ENVIO LOOKUP A HELPERS")
         if result:
-            print("RESPONDIO LA FUNCION HELPERS LOOKUP")
             matches = result.get("matches", [])
         return render_template("scores.html",matches=matches, current_matchday=matchday)
 
