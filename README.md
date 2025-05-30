@@ -41,6 +41,8 @@ venv/
 
 .vscode/ 
 
+.DS_Store (short for Desktop Services Store) is a hidden system file created by macOS in every folder you open in Finder
+
 ---
 
 ## Technologies Used
