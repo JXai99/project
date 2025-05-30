@@ -57,7 +57,6 @@ def after_request(response):
 @app.route("/", methods=["GET"])
 #@login_required
 def index():
-    if request.method == "GET":
         return render_template("index.html")
     
 @app.route("/register", methods=["GET", "POST"])
@@ -65,7 +64,8 @@ def register():
     """Register user"""
 
     if request.method == "POST":
-        name = request.form.get("username")
+        #name = request.form.get("username")
+        name = request.form.get("username", "").strip().lower()
         if not name:
             return apology("must provide username", 400)
         pw1 = request.form.get("password")
@@ -121,7 +121,9 @@ def login():
         #rows = db.execute(
         #    "SELECT * FROM users WHERE username = ?", request.form.get("username")
         #)
-        username = request.form.get("username")
+        #username = request.form.get("username")
+        username = request.form.get("username", "").strip().lower()
+
 
         rows = query_db(
             "SELECT * FROM users WHERE username = :username",
