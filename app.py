@@ -1,16 +1,12 @@
 import os
 import requests
-
 #from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from helpers import apology, login_required, lookup, usd
+from helpers import apology, login_required, lookup, usd, query_db, engine, write_db
 from dotenv import load_dotenv
-from sqlalchemy import create_engine,text
-from sqlalchemy.exc import SQLAlchemyError
-
 
 load_dotenv()
 
@@ -79,23 +75,24 @@ def register():
         if pw1 != pw2:
             flash("Passwords do not match!", "danger")
             return apology("must provide password correctly", 400)
-
-        rows = db.execute("SELECT username FROM users")
+        #rows = db.execute("SELECT username FROM users")  OLD STYLE CS50 TO NEW
+        rows = query_db("SELECT username FROM users")
         for row in rows:
 
             if (row["username"]) == name:
                 flash("Username already exist!", "warning")
                 return apology("Username already exist", 400)
-
-        print("username ok")
+        #print("username ok")
         hash = generate_password_hash(pw1)
 
-        update=db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", name, hash)
+        #update=db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", name, hash)
+        update = write_db("INSERT INTO users (username, hash) VALUES (:username, :hash)", {"username": name, "hash": hash})
+
         if update == 0:
             flash("Username Not Registered", "success")
             return apology("Username Not Registered", 400)
-        rowsid = db.execute("SELECT id FROM users")
-        session["user_id"] = rowsid[0]["id"]
+        #rowsid = db.execute("SELECT id FROM users")
+        #session["user_id"] = rowsid[0]["id"]
         flash("Registered successfully!", "success")
         return redirect("/login")
 
@@ -121,10 +118,15 @@ def login():
             return apology("must provide password", 403)
 
         # Query database for username
-        rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
-        )
+        #rows = db.execute(
+        #    "SELECT * FROM users WHERE username = ?", request.form.get("username")
+        #)
+        username = request.form.get("username")
 
+        rows = query_db(
+            "SELECT * FROM users WHERE username = :username",
+            {"username": username}
+        )
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(
             rows[0]["hash"], request.form.get("password")
