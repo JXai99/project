@@ -2,6 +2,9 @@ import requests
 
 from flask import redirect, render_template, session
 from functools import wraps
+import os
+from sqlalchemy import create_engine, text
+
 
 def apology(message, code=400):
     """Render message as an apology to user."""
@@ -63,3 +66,17 @@ def lookup(matchday,headers):
 def usd(value):
     """Format value as USD."""
     return f"${value:,.2f}"
+
+"""FOR DATABASE POSTGRESQL"""
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///scores.db")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(DATABASE_URL)
+
+def query_db(query, params=None):
+    """Execute a SQL query with optional parameters and return all results."""
+    with engine.connect() as conn:
+        result = conn.execute(text(query), params or {})
+        return result.fetchall()

@@ -156,21 +156,17 @@ def contact():
 def scores():
     if request.method == "POST":
         matchday = int(request.form.get("matchday"))
-        headers = {"X-Auth-Token": API_KEY}
-        result = lookup(matchday,headers)
-        if result:
-            #print("RESPONDIO LA FUNCION HELPERS LOOKUP")
-            matches = result.get("matches", [])
-
-        return render_template("scores.html", matches=matches, current_matchday=matchday)
     else:
-        #print("indexin HOscoresMEPAGE")
-        matchday = request.args.get("matchday", default=1, type=int)  # Default to matchday 1
-        headers = {"X-Auth-Token": API_KEY}
-        result = lookup(matchday,headers)
-        if result:
-            matches = result.get("matches", [])
-        return render_template("scores.html",matches=matches, current_matchday=matchday)
+        matchday = request.args.get("matchday", default=1, type=int)
+
+    headers = {"X-Auth-Token": API_KEY}
+    result = lookup(matchday, headers)
+
+    matches = []
+    if result:
+        matches = result.get("matches", [])
+
+    return render_template("scores.html", matches=matches, current_matchday=matchday)
 
 
 
