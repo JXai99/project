@@ -1,19 +1,23 @@
 import os
 import requests
 
-from cs50 import SQL
+#from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from helpers import apology, login_required, lookup, usd
 from dotenv import load_dotenv
+from sqlalchemy import create_engine,text
+from sqlalchemy.exc import SQLAlchemyError
+
 
 load_dotenv()
 
 
 # Configure application
 app = Flask(__name__)
+
 
 # replace with your Football-Data.org key
 API_KEY = os.getenv("API_KEY")
@@ -35,9 +39,14 @@ app.config["SECRET_KEY"] = "your_secret_key"
 #app.secret_key = "your_super_secret_key"
 
 # Configure CS50 Library to use SQLite database
-DATABASE_URL = os.getenv("DATABASE_URL")
-db = SQL(DATABASE_URL)
+#db = SQL(DATABASE_URL)
 #db = SQL("sqlite:///scores.db")
+# Try to get DATABASE_URL from environment, fallback to local SQLite
+#DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///scores.db")
+#if not DATABASE_URL:
+#    raise RuntimeError("DATABASE_URL not set"
+#engine = create_engine(DATABASE_URL)
+#engine = create_engine(os.environ["DATABASE_URL"])
 
 
 @app.after_request
