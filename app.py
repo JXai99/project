@@ -167,10 +167,12 @@ def contact():
 @app.route("/scores", methods=["GET", "POST"])
 @login_required
 def scores():
+    matches=[]
+    matchday = None
     if request.method == "POST":
-        matchday = int(request.form.get("matchday"))
-    else:
-        matchday = request.args.get("matchday", default=1, type=int)
+        matchday = int(request.form.get("matchday")) or 1
+    #else:
+    #    matchday = request.args.get("matchday", default=1, type=int)
 
     headers = {"X-Auth-Token": API_KEY}
     result = lookup(matchday, headers)
