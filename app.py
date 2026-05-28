@@ -170,21 +170,34 @@ def scores():
     matches=[]
     matchday = None
     if request.method == "POST":
-        matchday = int(request.form.get("matchday")) or 1
-    #else:
-    #    matchday = request.args.get("matchday", default=1, type=int)
+        try:
+            matchday = request.form.get("matchday", type=int)
+            #matchday = int(request.form.get("matchday")) or 1
+            if matchday is None:
+                #raise ValueError("Invalid matchday")
+                return apology("Invalid matchday", 400) 
+        except (ValueError, TypeError):
+            return apology("Invalid matchday", 400)
 
-    headers = {"X-Auth-Token": API_KEY}
-    result = lookup(matchday, headers)
+        headers = {"X-Auth-Token": API_KEY}
+        try:
+            
+            result = lookup(matchday, headers)
+            if result is None:
+                return apology("No data found for the specified matchday", 404)
+        except Exception as e:
+            print ("API Error:", e)
+            return apology("Error fetching data from API", 500)
 
-    matches = []
-    if result:
         matches = result.get("matches", [])
-
+        '''
+        #manipulating result after post event to get specific match details for testing
+        matchid=540417
+        for match in matches:
+            if match["id"] == matchid:
+                print(match["homeTeam"]["name"], "vs", match["awayTeam"]["shortName"])
+        '''
     return render_template("scores.html", matches=matches, current_matchday=matchday)
-
-
-
 
 
 @app.route("/logout")
