@@ -5,8 +5,10 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from helpers import apology, login_required, usd, query_db, engine, write_db, get_cached_scores, unified_format_render, save_scores
+from helpers import apology, login_required, usd, query_db, engine, write_db
 from services.futbol_api import lookup
+from services.cache_service import get_cached_scores, unified_format_render, save_scores
+from services.scores_service import get_scores
 
 from dotenv import load_dotenv
 
@@ -169,7 +171,7 @@ def contact():
 @app.route("/scores", methods=["GET", "POST"])
 @login_required
 def scores():
-    matches=[]
+    games=[]
     matchday = None
     MAX_MATCHDAYS = 34 
     
@@ -187,7 +189,7 @@ def scores():
                 return apology("Invalid matchday", 400)
         except (ValueError, TypeError):
             return apology("Invalid matchday", 400)
-        
+        '''
         # 1. CHECK CACHE FIRST
         cached_matches = get_cached_scores(matchday)
         print("DebuggLINE192: ", cached_matches)
@@ -198,7 +200,8 @@ def scores():
         if format_matches:
             print("entro format matches")
             return render_template("scores.html",matches=format_matches,current_matchday=matchday)
-        
+        '''
+        ''' 
         # 2. IF NO CACHE → CALL API
         headers = {"X-Auth-Token": API_KEY}
         try:
@@ -212,19 +215,22 @@ def scores():
         season_extracted = result.get("filters",{}).get("season")
         matches = result.get("matches", [])
         '''
+        '''
         #manipulating result after post event to get specific match details for testing
         matchid=540417
         for match in matches:
             if match["id"] == matchid:
                 print(match["homeTeam"]["name"], "vs", match["awayTeam"]["shortName"])
         '''
-        
+        '''
         all_finished = all(match["status"] == "FINISHED" for match in matches)
         #GUARDA EL MATCHDAY
         if all_finished:
             save_scores(matchday, matches, season_extracted)
+        '''
+        games = get_scores(matchday)
 
-    return render_template("scores.html", matches=matches, current_matchday=matchday)
+    return render_template("scores.html", matches=games, current_matchday=matchday)
 
 
 @app.route("/logout")
