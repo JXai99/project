@@ -40,6 +40,13 @@ def get_scores(matchday):
 
     #EXTRAE MATCHES FROM API_DATA
     matches = api_data.get("matches", [])
+    '''
+        #manipulating result after post event to get specific match details for testing
+        matchid=540417
+        for match in matches:
+            if match["id"] == matchid:
+                print(match["homeTeam"]["name"], "vs", match["awayTeam"]["shortName"])
+    '''
     all_finished = all(match["status"] == "FINISHED" for match in matches)
     if all_finished:
         save_scores(matchday,matches,season_extracted)
