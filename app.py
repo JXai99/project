@@ -189,9 +189,9 @@ def scores():
         
         # 1. CHECK CACHE FIRST
         cached_matches = get_cached_scores(matchday)
-        print("Debugg: ", cached_matches)
+        print("DebuggLINE192: ", cached_matches)
         format_matches = unified_format_render(cached_matches)
-        print("Debugg:", format_matches)
+        #print("DebuggLINE194:", format_matches)
         
         #PRINTS CACHED RESULTS FROM DB
         if format_matches:
