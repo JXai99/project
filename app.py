@@ -5,7 +5,8 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from helpers import apology, login_required, lookup, usd, query_db, engine, write_db
+from helpers import apology, login_required, lookup, usd, query_db, engine, write_db, get_cached_scores, unified_format_render, save_scores
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -169,16 +170,35 @@ def contact():
 def scores():
     matches=[]
     matchday = None
+    MAX_MATCHDAYS = 34 
+    
     if request.method == "POST":
         try:
             matchday = request.form.get("matchday", type=int)
             #matchday = int(request.form.get("matchday")) or 1
+            
+            #IF IS MISSING OR INVALID
             if matchday is None:
                 #raise ValueError("Invalid matchday")
                 return apology("Invalid matchday", 400) 
+            # 2. Validate it falls within an acceptable range (e.g., 1 to 38)          
+            if not (1 <= matchday <= MAX_MATCHDAYS):
+                return apology("Invalid matchday", 400)
         except (ValueError, TypeError):
             return apology("Invalid matchday", 400)
-
+        
+        # 1. CHECK CACHE FIRST
+        cached_matches = get_cached_scores(matchday)
+        print("Debugg: ", cached_matches)
+        format_matches = unified_format_render(cached_matches)
+        print("Debugg:", format_matches)
+        
+        #PRINTS CACHED RESULTS FROM DB
+        if format_matches:
+            print("entro format matches")
+            return render_template("scores.html",matches=format_matches,current_matchday=matchday)
+        
+        # 2. IF NO CACHE → CALL API
         headers = {"X-Auth-Token": API_KEY}
         try:
             
@@ -188,7 +208,7 @@ def scores():
         except Exception as e:
             print ("API Error:", e)
             return apology("Error fetching data from API", 500)
-
+        season_extracted = result.get("filters",{}).get("season")
         matches = result.get("matches", [])
         '''
         #manipulating result after post event to get specific match details for testing
@@ -197,6 +217,12 @@ def scores():
             if match["id"] == matchid:
                 print(match["homeTeam"]["name"], "vs", match["awayTeam"]["shortName"])
         '''
+        
+        all_finished = all(match["status"] == "FINISHED" for match in matches)
+        #GUARDA EL MATCHDAY
+        if all_finished:
+            save_scores(matchday, matches, season_extracted)
+
     return render_template("scores.html", matches=matches, current_matchday=matchday)
 
 
