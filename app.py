@@ -3,14 +3,15 @@ import os
 #from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-from werkzeug.security import check_password_hash, generate_password_hash
+#from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from helpers import apology, login_required, usd
-from services.db_service import query_db, write_db
+#from services.db_service import query_db, write_db
 #from services.futbol_api import lookup
 #from services.cache_service import get_cached_scores, unified_format_render, save_scores
-from services.scores_service import get_scores
+#from services.scores_service import get_scores
 from routes.scores_routes import scores_bp
+from routes.auth_routes import auth_bp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,6 +20,7 @@ load_dotenv()
 # Configure application
 app = Flask(__name__)
 app.register_blueprint(scores_bp)
+app.register_blueprint(auth_bp)
 
 # replace with your Football-Data.org key
 API_KEY = os.getenv("API_KEY")
@@ -63,7 +65,37 @@ def after_request(response):
 #@login_required
 def index():
         return render_template("index.html")
+
+@app.route("/indexin", methods=["GET"])
+@login_required
+def indexin():
+    if request.method == "GET":
+        print("indexin HOMEPAGE")
+        return render_template("indexin.html")
+
     
+@app.route("/about", methods=["GET"])
+@login_required
+def about():
+    if request.method == "GET":
+        return render_template("aboutme.html")
+    
+@app.route("/contact", methods=["GET"])
+@login_required
+def contact():
+    if request.method == "GET":
+        return render_template("contactme.html")
+    
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+'''  
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
@@ -103,7 +135,8 @@ def register():
 
     else:
         return render_template("register.html")
-    
+    '''
+'''   
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -149,25 +182,8 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
-    
-@app.route("/indexin", methods=["GET"])
-@login_required
-def indexin():
-    if request.method == "GET":
-        print("indexin HOMEPAGE")
-        return render_template("indexin.html")
-    
-@app.route("/about", methods=["GET"])
-@login_required
-def about():
-    if request.method == "GET":
-        return render_template("aboutme.html")
-    
-@app.route("/contact", methods=["GET"])
-@login_required
-def contact():
-    if request.method == "GET":
-        return render_template("contactme.html")
+'''  
+
 '''    
 @app.route("/scores", methods=["GET", "POST"])
 @login_required
@@ -195,17 +211,5 @@ def scores():
 
     return render_template("scores.html", matches=games, current_matchday=matchday)
 '''
-
-@app.route("/logout")
-def logout():
-    """Log user out"""
-
-    # Forget any user_id
-    session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
-
-
 #if __name__ == "__main__":
 #    app.run(debug=True)
