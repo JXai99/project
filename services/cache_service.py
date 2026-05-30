@@ -1,5 +1,5 @@
 from datetime import date
-from helpers import query_db, write_db
+from services.db_service import query_db, write_db
 
 def get_current_season():
     today = date.today()

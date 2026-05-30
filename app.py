@@ -5,10 +5,12 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from helpers import apology, login_required, usd, query_db, engine, write_db
+from helpers import apology, login_required, usd
+from services.db_service import query_db, write_db
 from services.futbol_api import lookup
 from services.cache_service import get_cached_scores, unified_format_render, save_scores
 from services.scores_service import get_scores
+from routes.scores_routes import scores_bp
 
 from dotenv import load_dotenv
 
@@ -17,7 +19,7 @@ load_dotenv()
 
 # Configure application
 app = Flask(__name__)
-
+app.register_blueprint(scores_bp)
 
 # replace with your Football-Data.org key
 API_KEY = os.getenv("API_KEY")
@@ -167,7 +169,7 @@ def about():
 def contact():
     if request.method == "GET":
         return render_template("contactme.html")
-    
+'''    
 @app.route("/scores", methods=["GET", "POST"])
 @login_required
 def scores():
@@ -193,7 +195,7 @@ def scores():
         games = get_scores(matchday)
 
     return render_template("scores.html", matches=games, current_matchday=matchday)
-
+'''
 
 @app.route("/logout")
 def logout():

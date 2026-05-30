@@ -7,7 +7,20 @@
 {% block main %}
     <!-- https://memegen.link/ -->
     <!-- https://knowyourmeme.com/memes/grumpy-cat -->
-    <img alt="{{ top }}" class="border img-fluid" src="https://api.memegen.link/images/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?background=https://i.imgur.com/CsCgN7Ll.png&width=400" title="{{ top }}">
-{% endblock %}
+    {% if top == 480 %}
+        <img src="/static/images/nightboard.png" alt="{{top}}" class="border img-fluid" title="{{ top }}">
+        
+    {% else %}
+        <img
+            alt="{{ top }}"
+            class="border img-fluid"
+            src="https://api.memegen.link/images/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?background=https://i.imgur.com/CsCgN7Ll.png&width=400"
+            title="{{ top }}"
+        >
+    <!--<img alt="{{ top }}" class="border img-fluid" src="https://api.memegen.link/images/custom/{{ top | urlencode }}/{{ bottom | urlencode }}.jpg?background=https://i.imgur.com/CsCgN7Ll.png&width=400" title="{{ top }}">
+-->
+    
+    {% endif %} 
+    {% endblock %}
 
 

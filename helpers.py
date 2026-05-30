@@ -3,8 +3,8 @@ import os
 #from datetime import date
 from flask import redirect, render_template, session
 from functools import wraps
-from sqlalchemy import create_engine, text
-from sqlalchemy.exc import SQLAlchemyError
+#from sqlalchemy import create_engine, text
+#from sqlalchemy.exc import SQLAlchemyError
 
 
 def apology(message, code=400):
@@ -29,7 +29,7 @@ def apology(message, code=400):
             s = s.replace(old, new)
         return s
 
-    return render_template("apology.html", top=code, bottom=escape(message)), code
+    return render_template("apology.html", top=code, bottom=escape(message)),code
 
 
 def login_required(f):
@@ -47,27 +47,10 @@ def login_required(f):
 
     return decorated_function
 
-
-def lookup(matchday,headers):
-    """Look up quote for symbol."""
-    url = f"https://api.football-data.org/v4/competitions/BL1/matches?matchday={matchday}"
-    print("ingreso a funcion helpers lookup")
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-        return data
-    except requests.RequestException as e:
-        print(f"Request error: {e}")
-    except (KeyError, ValueError) as e:
-        print(f"Data parsing error: {e}")
-    return None
-
-
 def usd(value):
     """Format value as USD."""
     return f"${value:,.2f}"
-
+'''
 """FOR DATABASE POSTGRESQL"""
 # Get DATABASE_URL from environment, fallback to local SQLite
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///scores.db")
@@ -82,8 +65,8 @@ try:
 except SQLAlchemyError as e:
     print("❌ Database connection failed:", e)
     raise RuntimeError("Failed to connect to the database.") from e
-   
-
+'''   
+'''
 # Query helper
 def query_db(query, params=None):
     """Execute a SQL query with optional parameters and return all results."""
@@ -106,7 +89,7 @@ def write_db(query, params=None):
     except SQLAlchemyError as e:
         print("❌ Write operation failed:", e)
         return 0
-    
+    '''
 
 
 
