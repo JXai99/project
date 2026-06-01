@@ -28,7 +28,7 @@ nav .navbar-brand .green
 .hero {
   height: 100vh; /* Full screen height */
   width: 100%;
-  background-image: url('/static/images/playerorange.png'); /* path to your image */
+  background-image: url('/static/images/ligaworldcuphero.png'); /* path to your image */
   background-size: cover;      /* ensures image covers the entire hero */
   background-position: center; /* centers the image */
   background-repeat: no-repeat;
