@@ -45,7 +45,7 @@ def generate_plot(match_id_required,home_team_required,away_team_required):
     plot_filename = f"static/plots/match_{home_team_required}{away_team_required}.png"
     fig.savefig(plot_filename)
     plt.close(fig)
-    print("Metricas generadas correctamente ✅. Revisar static/plots folder.")
+    print("Debbugline48plotting_service:✅Metricas generadas correctamente ✅. Revisar static/plots folder.")
 
     return plot_filename
 
