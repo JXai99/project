@@ -12,6 +12,7 @@ from helpers import apology, login_required, usd
 #from services.scores_service import get_scores
 from routes.scores_routes import scores_bp
 from routes.auth_routes import auth_bp
+from routes.plot_routes import plotting_bp
 from services.plotting_service import generate_plot
 from dotenv import load_dotenv
 
@@ -22,6 +23,7 @@ load_dotenv()
 app = Flask(__name__)
 app.register_blueprint(scores_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(plotting_bp)
 
 # replace with your Football-Data.org key
 API_KEY = os.getenv("API_KEY")
@@ -96,7 +98,7 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
-
+'''
 @app.route("/plot", methods=["GET"])
 @login_required
 def get_match_plot():
@@ -112,6 +114,8 @@ def get_match_plot():
         except ValueError as e:
             flash(str(e), "danger")
             return redirect("/indexin")    
+'''
+
 '''  
 @app.route("/register", methods=["GET", "POST"])
 def register():
