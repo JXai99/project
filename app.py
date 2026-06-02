@@ -12,6 +12,7 @@ from helpers import apology, login_required, usd
 #from services.scores_service import get_scores
 from routes.scores_routes import scores_bp
 from routes.auth_routes import auth_bp
+from services.plotting_service import generate_plot
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -95,6 +96,22 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
+@app.route("/plot", methods=["GET"])
+@login_required
+def get_match_plot():
+    if request.method == "GET":
+    # Example usage of the plotting service
+        match_id = 3857286  # Replace with actual match ID
+        home_team = "Ecuador"  # Replace with actual home team name
+        away_team = "Qatar"  # Replace with actual away team name
+
+        try:
+            plot_filename = generate_plot(match_id, home_team, away_team)
+            return {'plot': plot_filename, 'status': 'success'}
+        except ValueError as e:
+            flash(str(e), "danger")
+            return redirect("/indexin")    
 '''  
 @app.route("/register", methods=["GET", "POST"])
 def register():
