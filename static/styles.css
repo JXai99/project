@@ -230,3 +230,20 @@ body {
         width: 100%;
     }
 }
+
+/* Team card styling for plot selection TEST*/
+.team-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: 0.2s ease;
+}
+
+.team-card:hover {
+    transform: scale(1.03);
+    border-color: #ffffff55;
+}
+
+.btn-check:checked + .team-card {
+    border-color: #00ff88;
+    background: #1e1e1e;
+}

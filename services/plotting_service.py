@@ -4,6 +4,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from mplsoccer import Pitch
+from helpers import VALID_TEAMS
 import sys
 
 def generate_plot(match_id_required,home_team_required,away_team_required):
@@ -164,3 +165,33 @@ def label_teams(away_team_required,home_team_required,away_count,home_count):
     color="black",
     bbox=dict(facecolor="white", alpha=0.7, edgecolor="none")
     )
+
+def validate_team(team):
+    team = team.title().strip()
+    print("Debuggline171plotting_service Validate Team")
+    if team not in VALID_TEAMS:
+        return None
+    return team
+
+
+def find_match_id(team1, team2):
+    df = pd.read_csv("data/matches/world_cup_2022_matches.csv")
+
+    team1 = validate_team(team1)
+    
+    team2 = validate_team(team2)
+
+    if not team1 or not team2:
+        return None
+
+    match = df[
+        ((df["home_team"] == team1) & (df["away_team"] == team2)) |
+        ((df["home_team"] == team2) & (df["away_team"] == team1))
+    ]
+
+    if match.empty:
+        return None
+
+    row = match.iloc[0]
+
+    return int(row["match_id"]), row["home_team"], row["away_team"]

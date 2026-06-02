@@ -6,6 +6,14 @@ from functools import wraps
 #from sqlalchemy import create_engine, text
 #from sqlalchemy.exc import SQLAlchemyError
 
+VALID_TEAMS = {
+    "Ecuador", "Qatar", "Netherlands", "Senegal", "England", "Iran",
+    "USA", "Wales", "Argentina", "Saudi Arabia", "Mexico", "Poland",
+    "France", "Australia", "Denmark", "Tunisia", "Spain", "Costa Rica",
+    "Germany", "Japan", "Belgium", "Canada", "Brazil", "Serbia",
+    "Switzerland", "Cameroon", "Portugal", "Ghana", "Uruguay",
+    "South Korea", "Croatia", "Morocco"
+}
 
 def apology(message, code=400):
     """Render message as an apology to user."""

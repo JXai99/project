@@ -21,7 +21,7 @@
     </div>
 </section>
 
-<!-- Generated Plot -->
+<!-- Generated Plot 
 <section class="container text-center mb-5">
   <h3>{{ team1 }} vs {{ team2 }}</h3>
     <img
@@ -30,7 +30,7 @@
         class="img-fluid rounded shadow"
         alt="Shot Map">
 </section>
-
+-->
 
 
 <div class="container mt-5">
@@ -45,11 +45,10 @@
                     <label for="team1" class="form-label">Team A</label>
                     <select name="team1" id="team1" class="form-select form-select-dark" required>
                         <option value="">-- Select Team A --</option>
-                        <option value="Ecuador">Ecuador</option>
-                        <option value="Qatar">Qatar</option>
-                        <option value="Brazil">Brazil</option>
-                        <option value="Argentina">Argentina</option>
-                        <option value="France">France</option>
+                            {% for team in teams %}
+                              <option value="{{ team }}">{{ team }}</option>
+                            {% endfor %}
+
                     </select>
                 </div>
 
@@ -58,11 +57,10 @@
                     <label for="team2" class="form-label">Team B</label>
                     <select name="team2" id="team2" class="form-select form-select-dark" required>
                         <option value="">-- Select Team B --</option>
-                        <option value="Ecuador">Ecuador</option>
-                        <option value="Qatar">Qatar</option>
-                        <option value="Brazil">Brazil</option>
-                        <option value="Argentina">Argentina</option>
-                        <option value="France">France</option>
+                            {% for team in teams %}
+                              <option value="{{ team }}">{{ team }}</option>
+                            {% endfor %}
+
                     </select>
                 </div>
 
@@ -89,6 +87,17 @@
         </div>
     {% endif %}
 </div>
+<!--
+<div class="row">
+  {% for team in teams %}
+    <div class="col-6 col-md-3 mb-3">
+      
+      <input type="radio" class="btn-check" name="team1" id="t1-{{ team }}" value="{{ team }}" required>
+      <label class="card team-card text-center p-3" for="t1-{{ team }}">
+        {{ team }}
+      </label>
 
-
-{% endblock %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}-->
