@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Shot Metrics - sportSSoCCer
+{% endblock %}
+
+{% block main %}
+
+<!-- Header -->
+<header class="bg-secondary position-relative text-white text-center p-5 about-hero">
+    <div class="overlay"></div>
+    <h1>World Cup 2022 Shot Maps</h1>
+
+</header>
+
+<!-- Intro -->
+<section class="py-4 text-center">
+    <div class="container">
+        <h2>Shot Map Visualization</h2>
+        <p>Explore shot locations and goals from World Cup 2022 matches.</p>
+    </div>
+</section>
+
+<!-- Generated Plot -->
+<section class="container text-center mb-5">
+  <h3>{{ team1 }} vs {{ team2 }}</h3>
+    <img
+        
+        src="{{ url_for('static', filename=plot_filename) }}"
+        class="img-fluid rounded shadow"
+        alt="Shot Map">
+</section>
+
+
+
+<div class="container mt-5">
+    <!-- ✅ Team Selection Form -->
+    <div class="glass-card p-4 mb-4">
+        <h2 class="mb-4">Select Teams for Shot Map</h2>
+        
+        <form method="POST" action="/plot">
+            <div class="row g-3">
+                <!-- Team A -->
+                <div class="col-md-5">
+                    <label for="team1" class="form-label">Team A</label>
+                    <select name="team1" id="team1" class="form-select form-select-dark" required>
+                        <option value="">-- Select Team A --</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="Qatar">Qatar</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="France">France</option>
+                    </select>
+                </div>
+
+                <!-- Team B -->
+                <div class="col-md-5">
+                    <label for="team2" class="form-label">Team B</label>
+                    <select name="team2" id="team2" class="form-select form-select-dark" required>
+                        <option value="">-- Select Team B --</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="Qatar">Qatar</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="France">France</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn gradient-border w-100" aria-pressed="true">
+                        Generate Shot Map
+                    </button>
+                </div>
+            </div>
+
+            <!-- ✅ Error message -->
+            {% if error %}
+                <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- ✅ Display plot if generated -->
+    {% if plot_filename %}
+        <div class="glass-card p-4">
+            <h3>{{ team1 }} vs {{ team2 }}</h3>
+            <img src="{{ url_for('static', filename=plot_filename) }}" alt="Shot Map" class="img-fluid" style="max-width: 100%; border-radius: 10px;">
+        </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}

@@ -91,6 +91,8 @@ def create_pitch():
         line_color="white"
     )
     fig,ax= pitch.draw()
+    fig.set_facecolor('#1f1f1f')
+    ax.set_facecolor('#1f1f1f')
     return fig,ax
 
 def plot_shot(shot, pitchx, pitchy, home_team, ax):
