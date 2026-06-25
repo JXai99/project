@@ -134,7 +134,8 @@ async function generatePlot() {
     label.innerText = "Loading...";
 
     if (!home_team || !away_team) {
-        alert("Select both teams first");
+        label.innerText = "⚠️ Please select both teams";
+        label.style.color = "#dc3545"; // Bootstrap danger red
         return;
     }
 
