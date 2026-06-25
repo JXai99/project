@@ -131,6 +131,7 @@ async function generatePlot() {
     // 🔄 reset UI every click
     img.removeAttribute("src");
     img.style.display = "none";
+    label.style.color = "#fff";
     label.innerText = "Loading...";
 
     if (!home_team || !away_team) {

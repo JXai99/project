@@ -64,7 +64,8 @@ def api_plot():
             plot_path,home_goal, away_goal = generate_plot(match_id, home_team, away_team)
 
             return jsonify({
-                "plot_url": "/" + plot_path,
+                #"plot_url": "/" + plot_path,
+                "plot_url": f"data:image/png;base64,{plot_path}",  # No "/" prefix
                 "home_team": home_team,
                 "away_team": away_team,
                 "home_goal": home_goal,

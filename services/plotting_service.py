@@ -5,6 +5,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from mplsoccer import Pitch
 from helpers import VALID_TEAMS
+import io
+import base64
 import sys
 
 def generate_plot(match_id_required,home_team_required,away_team_required):
@@ -49,11 +51,16 @@ def generate_plot(match_id_required,home_team_required,away_team_required):
 
     # Save the plot to a file
     plot_filename = f"static/plots/match_{home_team_required}{away_team_required}.png"
-    fig.savefig(plot_filename)
+    #fig.savefig(plot_filename)
+    #plt.close(fig)
+    buffer = io.BytesIO()
+    fig.savefig(buffer, format='png')
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.read()).decode()
     plt.close(fig)
     print("Debbugline48plotting_service:✅Metricas generadas correctamente ✅. Revisar static/plots folder. ",away_goal, home_goal)
-
-    return plot_filename, home_goal, away_goal
+    return image_base64, home_goal, away_goal
+    #return plot_filename, home_goal, away_goal
 
 def load_shots(match_id: int)-> pd.DataFrame:
     """
