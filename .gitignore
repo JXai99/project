@@ -13,3 +13,4 @@ venv/
 flask_session/
 .DS_Store
 scores.db
+static/plots/
