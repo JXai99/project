@@ -46,7 +46,7 @@ def unified_format_render(cached_matches):
 def save_scores(matchday, matches, season):
     for match in matches:
         query = """
-        INSERT OR IGNORE INTO scores (
+        INSERT INTO scores (
             api_match_id,
             season,
             matchday,
@@ -78,6 +78,7 @@ def save_scores(matchday, matches, season):
             :winner,
             :status
         )
+        ON CONFLICT (api_match_id) DO NOTHING;
         """
         write_db(query, {
             "api_match_id":match["id"],
