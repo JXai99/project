@@ -9,7 +9,7 @@
 <!-- Header -->
 <header class="bg-secondary position-relative text-white text-center p-5 about-hero">
     <div class="overlay"></div>
-    <h1>World Cup 2022 Shot Maps</h1>
+    <h1>World Cup Qatar 2022</h1>
 
 </header>
 
@@ -36,7 +36,7 @@
 <div class="container mt-5">
     <!-- ✅ Team Selection Form -->
     <div class="glass-card p-4 mb-4">
-        <h2 class="mb-4">Select Teams for Shot Map</h2>
+        <h2 class="mb-4">Select Teams</h2>
         
         <form method="POST" action="/plot">
             <div class="row g-3">
@@ -66,7 +66,8 @@
 
                 <!-- Submit Button -->
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn gradient-border w-100" aria-pressed="true">
+                    <button type="button" class="btn gradient-border w-100" onclick="generatePlot()">
+                    <!--<button type="submit" class="btn gradient-border w-100" aria-pressed="true"></button>-->
                         Generate Shot Map
                     </button>
                 </div>
@@ -87,6 +88,18 @@
         </div>
     {% endif %}
 </div>
+
+<!-- <button type="button" onclick="generatePlot()" class="btn gradient-border w-100">
+  Generate Plot
+</button>-->
+<div class="glass-card p-4">
+    <!--<h3>{{ team1 }} vs {{ team2 }}</h3>-->
+    <h3 id="match-label">Select teams</h3>
+    <!--<img src="{{ url_for('static', filename=plot_filename) }}" alt="Shot Map" class="img-fluid" style="max-width: 100%; border-radius: 10px;"> -->
+    <img id="plot-img" class="img-fluid" style="max-width: 100%; border-radius: 10px;">
+    <!-- ERROR MESSAGE FROM BACKEND <p id="error-msg" class="text-danger"></p>-->
+</div>
+
 <!--
 <div class="row">
   {% for team in teams %}
@@ -100,4 +113,66 @@
     </div>
   {% endfor %}
 </div>
-{% endblock %}-->
+-->
+{% endblock %}
+{% block scripts %}
+<script>
+async function generatePlot() {
+
+    const home_team = document.getElementById("team1").value;
+    const away_team = document.getElementById("team2").value;
+
+
+    const img = document.getElementById("plot-img");
+    const label = document.getElementById("match-label");
+
+    console.log("DEBUG:", home_team, away_team);
+
+    // 🔄 reset UI every click
+    img.removeAttribute("src");
+    img.style.display = "none";
+    label.innerText = "Loading...";
+
+    if (!home_team || !away_team) {
+        alert("Select both teams first");
+        return;
+    }
+
+    const res = await fetch("/api/plot", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            home_team,
+            away_team
+        })
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    // ✅ ERROR HANDLING (ADD HERE)
+    if (!res.ok) {
+        document.getElementById("match-label").innerText =
+            data.error || "No match found for selected teams";
+        document.getElementById("plot-img").src = "";
+        return;
+    }
+    // ✅ ERROR HANDLING shows message from BACKEND
+    //    if (!res.ok) {
+    //    document.getElementById("error-msg").innerText =
+    //        data.error || "Something went wrong";
+    //    return;
+    //}
+
+    // clear old error
+
+    // ✅ SUCCESS UI UPDATE
+    document.getElementById("plot-img").src = data.plot_url;
+    img.style.display = "block";
+    document.getElementById("match-label").innerText =
+        `${data.home_team} (${data.home_goal}) vs ${data.away_team} (${data.away_goal})`;
+    
+}
+
+</script>
+{% endblock %}

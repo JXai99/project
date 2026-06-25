@@ -14,6 +14,7 @@ def generate_plot(match_id_required,home_team_required,away_team_required):
     pitchWidthY=80
     home_count = 0
     away_count = 0
+    home_goal = away_goal = 0
     try:
         match_shots_df = load_shots(match_id_required)
 
@@ -35,6 +36,10 @@ def generate_plot(match_id_required,home_team_required,away_team_required):
             home_count += 1
         else:
             away_count += 1
+        if (team == home_team_required) and (shot["shot_outcome_name"] == "Goal"):
+            home_goal += 1
+        elif (team == away_team_required) and (shot["shot_outcome_name"] == "Goal"):
+            away_goal += 1
     label_teams(away_team_required,home_team_required,away_count,home_count)
 
     fig.set_size_inches(13.3,8)
@@ -46,9 +51,9 @@ def generate_plot(match_id_required,home_team_required,away_team_required):
     plot_filename = f"static/plots/match_{home_team_required}{away_team_required}.png"
     fig.savefig(plot_filename)
     plt.close(fig)
-    print("Debbugline48plotting_service:✅Metricas generadas correctamente ✅. Revisar static/plots folder.")
+    print("Debbugline48plotting_service:✅Metricas generadas correctamente ✅. Revisar static/plots folder. ",away_goal, home_goal)
 
-    return plot_filename
+    return plot_filename, home_goal, away_goal
 
 def load_shots(match_id: int)-> pd.DataFrame:
     """
@@ -78,7 +83,9 @@ def load_shots(match_id: int)-> pd.DataFrame:
     df["shot_outcome_name"] = df["shot_outcome_name"].str.strip()
 
     #match_df= df[df["match_id"]==match_id]
-
+    #print(df.columns)
+    #print(sorted(df['shot_outcome_name'].unique()))
+    #print(sorted(df['shot_type_name'].unique()))
     # -------------------------
     # STEP: CLEAN TIME DOMAIN (IMPORTANT FIX)
     # -------------------------
@@ -144,7 +151,9 @@ def format_name(name)-> str:
         return name
     if len(parts) == 2:
         return f"{parts[0]} {parts[1]}"
-    return f"{parts[0]} {parts[-2]}"  # First + Last for 3+ part names
+    if len(parts) == 3:
+        return f"{parts[0]} {parts[2]}"  # First + Last, skip middle
+    return f"{parts[0]} {parts[-2]}"  # First + Last for 4+ part names
 
 def label_teams(away_team_required,home_team_required,away_count,home_count):
     plt.text(
@@ -188,7 +197,7 @@ def find_match_id(team1, team2):
         ((df["home_team"] == team1) & (df["away_team"] == team2)) |
         ((df["home_team"] == team2) & (df["away_team"] == team1))
     ]
-
+    
     if match.empty:
         return None
 
